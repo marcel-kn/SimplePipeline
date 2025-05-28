@@ -1,2 +1,0 @@
-set(__QT_DEPLOY_TARGET_SimplePipeline_FILE /home/marcel/Dev/SimplePipeline/build/Desktop-Debug/SimplePipeline)
-set(__QT_DEPLOY_TARGET_SimplePipeline_TYPE EXECUTABLE)
