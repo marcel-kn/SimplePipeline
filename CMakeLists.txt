@@ -15,6 +15,7 @@ qt_add_executable(SimplePipeline
     config.ini
     sql/setup_db.sql
     .gitignore
+    README.md
 )
 
 target_link_libraries(SimplePipeline
