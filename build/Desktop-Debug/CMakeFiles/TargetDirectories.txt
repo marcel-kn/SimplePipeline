@@ -1,0 +1,9 @@
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/SimplePipeline.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/edit_cache.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/rebuild_cache.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/list_install_components.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/install.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/install/local.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/install/strip.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/SimplePipeline_autogen_timestamp_deps.dir
+/home/marcel/Dev/SimplePipeline/build/Desktop-Debug/CMakeFiles/SimplePipeline_autogen.dir
