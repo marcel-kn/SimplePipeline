@@ -11,6 +11,7 @@
 #include <QTabWidget>
 #include <QLabel>
 #include <QComboBox>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -56,10 +57,13 @@ MainWindow::MainWindow(QWidget *parent)
     filterBoxLayout->addWidget(allProjectsBtn);
     filterBoxLayout->addWidget(refreshBtn);
 
-    QComboBox *projectsComboBox = new QComboBox();
+    projectsComboBox = new QComboBox();
+    populateProjectsComboBox();
 
     QTabWidget *leftTabBar = new QTabWidget();
-    QTableWidget *shotsTable = new QTableWidget();
+    shotsTable = new QTableWidget();
+    populateShotsTable();
+
     QTableWidget *assetsTable = new QTableWidget();
     leftTabBar->addTab(shotsTable, "shots");
     leftTabBar->addTab(assetsTable, "assets");
@@ -89,6 +93,20 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::populateArtistsComboBox(){
     artistsComboBox->addItems(controller->loadArtists());
+}
+void MainWindow::populateProjectsComboBox(){
+    projectsComboBox->addItems(controller->loadProjects());
+}
+void MainWindow::populateShotsTable() {
+    QStringList shotNames = controller->loadShots();
+    shotsTable->setRowCount(shotNames.size());
+    shotsTable->setColumnCount(1);
+
+    for (int i = 0; i < shotNames.size(); i++) {
+        QTableWidgetItem *item = new QTableWidgetItem(shotNames.at(i));
+        shotsTable->setItem(i, 0, item);
+    }
+
 }
 
 void MainWindow::onClose() {

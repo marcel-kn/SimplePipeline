@@ -9,6 +9,8 @@ class Controller
 public:
     Controller(DataBaseManager *db);
     QStringList loadArtists();
+    QStringList loadProjects();
+    QStringList loadShots();
 private:
     DataBaseManager *db;
 };

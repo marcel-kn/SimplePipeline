@@ -12,7 +12,7 @@ qt_add_executable(SimplePipeline
     mainwindow.h
     databasemanager.h databasemanager.cpp
     controller.h controller.cpp
-    config.ini
+
     sql/setup_db.sql
     .gitignore
     README.md

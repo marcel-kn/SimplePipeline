@@ -4,6 +4,7 @@
 #include "databasemanager.h"
 #include <QMainWindow>
 #include <QComboBox>
+#include <QTableWidget>
 
 class MainWindow : public QMainWindow
 {
@@ -13,9 +14,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void populateArtistsComboBox();
+    void populateProjectsComboBox();
+    void populateShotsTable();
 
 private:
     QComboBox *artistsComboBox;
+    QComboBox *projectsComboBox;
+    QTableWidget *shotsTable;
     Controller* controller;
     DataBaseManager* dbm;
 
