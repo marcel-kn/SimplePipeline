@@ -7,9 +7,14 @@ Controller::Controller(DataBaseManager *db) : db(db) {
 QStringList Controller::loadArtists() {
     return db->getArtistList();
 }
-QStringList Controller::loadProjects() {
-    return db->getProjectList();
+QList<QPair<int, QString>> Controller::loadProjects() {
+    //return db->getProjectList();
+    return db->getColumnWithId("projects", "name");
 }
-QStringList Controller::loadShots() {
-    return db->getColumn("shots", "name");
+QList<QPair<int, QString>> Controller::loadShots() {
+    return db->getColumnWithId("shots", "name");
+}
+
+void Controller::storeProject(ProjectModel project) {
+    db->storeProject(project);
 }

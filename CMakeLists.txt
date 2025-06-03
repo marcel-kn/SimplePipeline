@@ -16,6 +16,8 @@ qt_add_executable(SimplePipeline
     sql/setup_db.sql
     .gitignore
     README.md
+    models/projectmodel.h models/projectmodel.cpp
+    createprojectdialog.h createprojectdialog.cpp
 )
 
 target_link_libraries(SimplePipeline

@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "createprojectdialog.h"
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
@@ -33,8 +34,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     QAction *closeAction = new QAction("Close", this);
     menuMenu->addAction(closeAction);
-
     connect(closeAction, &QAction::triggered, this, &MainWindow::onClose);
+
+    QAction *openCreateProjectAction = new QAction("Create Project", this);
+    menuMenu->addAction(openCreateProjectAction);
+    connect(openCreateProjectAction, &QAction::triggered, this, &MainWindow::onCreateProject);
 
     QSplitter *mainSplitter = new QSplitter(Qt::Horizontal, this);
 
@@ -94,21 +98,34 @@ MainWindow::~MainWindow() {}
 void MainWindow::populateArtistsComboBox(){
     artistsComboBox->addItems(controller->loadArtists());
 }
+
 void MainWindow::populateProjectsComboBox(){
-    projectsComboBox->addItems(controller->loadProjects());
+    for (const auto& project : controller->loadProjects()){
+        projectsComboBox->addItem(project.second, project.first);
+    }
 }
+
 void MainWindow::populateShotsTable() {
-    QStringList shotNames = controller->loadShots();
-    shotsTable->setRowCount(shotNames.size());
+    QList<QPair<int, QString>> shotNamesIds = controller->loadShots();
+    shotsTable->setRowCount(shotNamesIds.size());
     shotsTable->setColumnCount(1);
 
-    for (int i = 0; i < shotNames.size(); i++) {
-        QTableWidgetItem *item = new QTableWidgetItem(shotNames.at(i));
+    for (int i = 0; i < shotNamesIds.size(); i++) {
+        QTableWidgetItem *item = new QTableWidgetItem(shotNamesIds.at(i).second);
+        // Store Id in first role
+        item->setData(Qt::UserRole, shotNamesIds.at(i).first);
         shotsTable->setItem(i, 0, item);
     }
-
 }
 
 void MainWindow::onClose() {
     close();
+}
+
+void MainWindow::onCreateProject() {
+    CreateProjectDialog dialog(this);
+    if (dialog.exec() == QDialog::Accepted) {
+        ProjectModel p = dialog.project();
+        controller->storeProject(p);
+    }
 }

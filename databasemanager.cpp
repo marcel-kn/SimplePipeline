@@ -1,4 +1,5 @@
 #include "databasemanager.h"
+
 #include <QtSql/QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -6,7 +7,6 @@
 #include <QDebug>
 #include <QSettings>
 #include <QFile>
-#include <QDir>
 
 DataBaseManager::DataBaseManager() {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMARIADB");
@@ -63,21 +63,39 @@ QStringList DataBaseManager::getArtistList() {
 }
 
 /**
- * @brief Retrieves short names of all projects.
- * @return List of short names.
- * maybe this type of query can be made more generic
- * like getList(table, column)
+ * @brief Retrieves entries of a specified column
+ * together with their id.
+ * @return List of entries and ids.
  */
-QStringList DataBaseManager::getProjectList() {
-    QStringList result;
-    QSqlQuery query("SELECT name FROM projects");
+QList<QPair<int, QString>> DataBaseManager::getColumnWithId(QString table, QString column) {
+    QList<QPair<int, QString>> result;
+    QString queryString = QString("SELECT id, %1 FROM %2").arg(column, table);
+    QSqlQuery query(queryString);
 
     if (!query.exec()) {
         qDebug() << "Query-Error:" << query.lastError().text();
     }
     while (query.next()){
-        QString name = query.value(0).toString();
-        result << name;
+        int id = query.value(0).toInt();
+        QString entry = query.value(1).toString();
+        result << qMakePair(id, entry);
     }
     return result;
+}
+
+void DataBaseManager::storeProject(ProjectModel project) {
+    QSqlQuery query;
+    query.prepare("INSERT INTO projects (name, path, description, status, frameRate, resolutionW, "
+                  "resolutionH) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    query.addBindValue(project.name());
+    query.addBindValue(project.path());
+    query.addBindValue(project.description());
+    query.addBindValue(project.status());
+    query.addBindValue(project.framerate());
+    query.addBindValue(project.resolutionW());
+    query.addBindValue(project.resolutionH());
+
+    if (!query.exec()) {
+        qDebug() << "Query-Error:" << query.lastError().text();
+    }
 }
