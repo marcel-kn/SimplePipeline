@@ -1,3 +1,6 @@
+-- This file sets up the Database for SimplePipeline
+-- Creates some sample Data as well
+
 CREATE DATABASE IF NOT EXISTS `simplePipeline`;
 
 USE `simplePipeline`;

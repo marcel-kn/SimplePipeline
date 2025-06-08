@@ -5,6 +5,8 @@
 #include <QMainWindow>
 #include <QComboBox>
 #include <QTableWidget>
+#include <QTabWidget>
+#include <QPushButton>
 
 class MainWindow : public QMainWindow
 {
@@ -15,7 +17,19 @@ public:
     ~MainWindow();
     void populateArtistsComboBox();
     void populateProjectsComboBox();
-    void populateShotsTable();
+    void populateElemTable();
+
+    /**
+     * @brief Queries the selected Tab in the Elements Tab Widget
+     * @return Index of the tab:
+     * 0 - Shots, 1 - Assets
+     */
+    int queryActiveTab();
+
+    /**
+     * @brief Sets the names for the left buttons Shot or Asset specific
+     */
+    void setElemBtnNames();
 
 private:
     QComboBox *artistsComboBox;
@@ -23,9 +37,14 @@ private:
     QTableWidget *shotsTable;
     Controller* controller;
     DataBaseManager* dbm;
+    QTabWidget *leftTabBar;
+    QPushButton *createBtn;
+    QPushButton *manageBtn;
+    QPushButton *deleteBtn;
 
 private slots:
     void onClose();
     void onCreateProject();
+    void onElemTabChanged();
 };
 #endif // MAINWINDOW_H

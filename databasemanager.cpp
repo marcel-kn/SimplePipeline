@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QSettings>
 #include <QFile>
+#include <QDir>
 
 DataBaseManager::DataBaseManager() {
     QSqlDatabase db = QSqlDatabase::addDatabase("QMARIADB");

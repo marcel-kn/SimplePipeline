@@ -64,9 +64,9 @@ MainWindow::MainWindow(QWidget *parent)
     projectsComboBox = new QComboBox();
     populateProjectsComboBox();
 
-    QTabWidget *leftTabBar = new QTabWidget();
+    leftTabBar = new QTabWidget();
     shotsTable = new QTableWidget();
-    populateShotsTable();
+    populateElemTable();
 
     QTableWidget *assetsTable = new QTableWidget();
     leftTabBar->addTab(shotsTable, "shots");
@@ -74,9 +74,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     QWidget *bottomLeftBtnBox = new QWidget();
     QHBoxLayout *bottomLeftBtnBoxLayout = new QHBoxLayout(bottomLeftBtnBox);
-    QPushButton *createBtn = new QPushButton("Create Shot");
-    QPushButton *manageBtn = new QPushButton("Manage Shows");
-    QPushButton *deleteBtn = new QPushButton("Delete Shot");
+    createBtn = new QPushButton(this);
+    manageBtn = new QPushButton(this);
+    deleteBtn = new QPushButton(this);
+
+    connect(leftTabBar, &QTabWidget::currentChanged, this, &MainWindow::onElemTabChanged);
 
     bottomLeftBtnBoxLayout->addWidget(createBtn);
     bottomLeftBtnBoxLayout->addWidget(manageBtn);
@@ -91,6 +93,8 @@ MainWindow::MainWindow(QWidget *parent)
     mainSplitter->addWidget(new QLabel("Placeholder for the right part."));
 
     setCentralWidget(mainSplitter);
+
+    setElemBtnNames();
 }
 
 MainWindow::~MainWindow() {}
@@ -105,15 +109,33 @@ void MainWindow::populateProjectsComboBox(){
     }
 }
 
-void MainWindow::populateShotsTable() {
-    QList<QPair<int, QString>> shotNamesIds = controller->loadShots();
-    shotsTable->setRowCount(shotNamesIds.size());
+int MainWindow::queryActiveTab() {
+    return leftTabBar->currentIndex();
+}
+
+void MainWindow::setElemBtnNames() {
+    int tab = queryActiveTab();
+    if (tab == 0) {
+        createBtn->setText("Create Shot");
+        manageBtn->setText("Manage Shows");
+        deleteBtn->setText("Delete Shot");
+    }
+    else if (tab == 1) {
+        createBtn->setText("Create Asset");
+        manageBtn->setText("Manage Types");
+        deleteBtn->setText("Delete Asset");
+    }
+}
+
+void MainWindow::populateElemTable() {
+    QList<QPair<int, QString>> elemNamesIds = controller->loadShots();
+    shotsTable->setRowCount(elemNamesIds.size());
     shotsTable->setColumnCount(1);
 
-    for (int i = 0; i < shotNamesIds.size(); i++) {
-        QTableWidgetItem *item = new QTableWidgetItem(shotNamesIds.at(i).second);
+    for (int i = 0; i < elemNamesIds.size(); i++) {
+        QTableWidgetItem *item = new QTableWidgetItem(elemNamesIds.at(i).second);
         // Store Id in first role
-        item->setData(Qt::UserRole, shotNamesIds.at(i).first);
+        item->setData(Qt::UserRole, elemNamesIds.at(i).first);
         shotsTable->setItem(i, 0, item);
     }
 }
@@ -128,4 +150,8 @@ void MainWindow::onCreateProject() {
         ProjectModel p = dialog.project();
         controller->storeProject(p);
     }
+}
+
+void MainWindow::onElemTabChanged() {
+    setElemBtnNames();
 }
