@@ -11,7 +11,8 @@ public:
     Controller(DataBaseManager *db);
     QStringList loadArtists();
     QList<QPair<int, QString>> loadProjects();
-    QList<QPair<int, QString>> loadShots();
+    QList<QPair<int, QString>> loadShots(int show_id);
+    QList<QPair<int, QString>> loadShows();
     void storeProject(ProjectModel project);
 
 private:

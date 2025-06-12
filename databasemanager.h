@@ -15,6 +15,7 @@ public:
     DataBaseManager();
     QStringList getArtistList();
     QList<QPair<int, QString>> getProjectList();
+    QList<QPair<int, QString>> getShotList(int show_id);
     QList<QPair<int, QString>> getColumnWithId(QString table, QString column);
     QStringList getColumn(QString table, QString column);
 

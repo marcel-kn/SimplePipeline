@@ -63,6 +63,23 @@ QStringList DataBaseManager::getArtistList() {
     return result;
 }
 
+QList<QPair<int, QString>> DataBaseManager::getShotList(int show_id) {
+    QList<QPair<int, QString>> result;
+    QSqlQuery query;
+    query.prepare("SELECT id, name FROM shots WHERE show_id = ?");
+    query.addBindValue(show_id);
+
+    if (!query.exec()) {
+        qDebug() << "Query-Error:" << query.lastError().text();
+    }
+    while (query.next()){
+        int id = query.value(0).toInt();
+        QString name = query.value(1).toString();
+        result << qMakePair(id, name);
+    }
+    return result;
+}
+
 /**
  * @brief Retrieves entries of a specified column
  * together with their id.

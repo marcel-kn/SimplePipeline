@@ -77,11 +77,11 @@ CREATE TABLE `shots` (
 INSERT INTO `shots` (name, length, parent_id, description,
                      thumb_file, status, creation_date, show_id, writeProtected)
 VALUES ('Shot_000',245,0,'Establisher Shot, Kamerafahrt an großem Fliegenpilz vorbei.',
-        '000.jpg','in progress',NULL,0, b'0');
+        '000.jpg','in progress',NULL,1, b'0');
 INSERT INTO `shots` (name, length, parent_id, description,
                      thumb_file, status, creation_date, show_id, writeProtected)
 VALUES ('Shot_010',80,0,'Rennende Wildschweine im Herbstwald.',
-        '000.jpg','in progress',NULL,0, b'0');
+        '000.jpg','in progress',NULL,2, b'0');
 
 --
 -- Table structure for table `shows`

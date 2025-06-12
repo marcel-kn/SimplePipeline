@@ -7,6 +7,7 @@
 #include <QTableWidget>
 #include <QTabWidget>
 #include <QPushButton>
+#include <QTreeView>
 
 class MainWindow : public QMainWindow
 {
@@ -34,7 +35,8 @@ public:
 private:
     QComboBox *artistsComboBox;
     QComboBox *projectsComboBox;
-    QTableWidget *shotsTable;
+    QTableWidget *assetsTable;
+    QTreeView *shotsTable;
     Controller* controller;
     DataBaseManager* dbm;
     QTabWidget *leftTabBar;

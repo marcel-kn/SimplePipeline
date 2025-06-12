@@ -13,6 +13,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QDebug>
+#include <QStandardItemModel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -65,10 +66,10 @@ MainWindow::MainWindow(QWidget *parent)
     populateProjectsComboBox();
 
     leftTabBar = new QTabWidget();
-    shotsTable = new QTableWidget();
+    shotsTable = new QTreeView();
     populateElemTable();
 
-    QTableWidget *assetsTable = new QTableWidget();
+    assetsTable = new QTableWidget();
     leftTabBar->addTab(shotsTable, "shots");
     leftTabBar->addTab(assetsTable, "assets");
 
@@ -128,16 +129,33 @@ void MainWindow::setElemBtnNames() {
 }
 
 void MainWindow::populateElemTable() {
-    QList<QPair<int, QString>> elemNamesIds = controller->loadShots();
-    shotsTable->setRowCount(elemNamesIds.size());
-    shotsTable->setColumnCount(1);
 
-    for (int i = 0; i < elemNamesIds.size(); i++) {
-        QTableWidgetItem *item = new QTableWidgetItem(elemNamesIds.at(i).second);
-        // Store Id in first role
-        item->setData(Qt::UserRole, elemNamesIds.at(i).first);
-        shotsTable->setItem(i, 0, item);
+    QList<QPair<int, QString>> catNamesIds = controller->loadShows();
+
+    QStandardItemModel *model = new QStandardItemModel();
+
+    // insert category
+    for (int i = 0; i < catNamesIds.size(); i++) {
+        QStandardItem *item = new QStandardItem(catNamesIds.at(i).second);
+        item->setEnabled(false);
+        item->setSelectable(false);
+        model->appendRow(item);
+
+        // insert elements
+        QList<QPair<int, QString>> elemNamesIds = controller->loadShots(catNamesIds.at(i).first);
+        for (int e = 0; e < elemNamesIds.size(); e++) {
+            QStandardItem *eItem = new QStandardItem(elemNamesIds.at(e).second);
+            // Store id in first role
+            eItem->setData(elemNamesIds.at(e).first, Qt::UserRole);
+            eItem->setEnabled(false);
+            item->appendRow(eItem);
+        }
     }
+
+    shotsTable->setModel(model);
+    shotsTable->sortByColumn(0, Qt::AscendingOrder);
+
+    shotsTable->expandAll();
 }
 
 void MainWindow::onClose() {
