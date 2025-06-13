@@ -5,6 +5,8 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets Sql)
 
 qt_standard_project_setup()
 
+qt_add_resources(APP_RESOURCES resources.qrc)
+
 qt_add_executable(SimplePipeline
     WIN32 MACOSX_BUNDLE
     main.cpp
@@ -18,6 +20,8 @@ qt_add_executable(SimplePipeline
     README.md
     models/projectmodel.h models/projectmodel.cpp
     createprojectdialog.h createprojectdialog.cpp
+    resources.qrc
+    ${APP_RESOURCES}
 )
 
 target_link_libraries(SimplePipeline

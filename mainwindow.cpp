@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 #include "createprojectdialog.h"
+
+#include <functional>
+
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
@@ -14,6 +17,7 @@
 #include <QComboBox>
 #include <QDebug>
 #include <QStandardItemModel>
+#include <QPixmap>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -67,7 +71,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     leftTabBar = new QTabWidget();
     shotsTable = new QTreeView();
-    populateElemTable();
+    populateElemTable(shotsTable,
+                      [this](){return controller->loadShows();},
+                      [this](int id){return controller->loadShots(id);});
 
     assetsTable = new QTableWidget();
     leftTabBar->addTab(shotsTable, "shots");
@@ -128,9 +134,13 @@ void MainWindow::setElemBtnNames() {
     }
 }
 
-void MainWindow::populateElemTable() {
+void MainWindow::populateElemTable(
+    QTreeView *elemtable,
+    std::function<QList<QPair<int, QString>>()> loadCategories,
+    std::function<QList<QPair<int, QString>>(int)> loadElements
+    ) {
 
-    QList<QPair<int, QString>> catNamesIds = controller->loadShows();
+    QList<QPair<int, QString>> catNamesIds = loadCategories();
 
     QStandardItemModel *model = new QStandardItemModel();
 
@@ -142,20 +152,26 @@ void MainWindow::populateElemTable() {
         model->appendRow(item);
 
         // insert elements
-        QList<QPair<int, QString>> elemNamesIds = controller->loadShots(catNamesIds.at(i).first);
+
+        QList<QPair<int, QString>> elemNamesIds = loadElements(catNamesIds.at(i).first);
+
         for (int e = 0; e < elemNamesIds.size(); e++) {
             QStandardItem *eItem = new QStandardItem(elemNamesIds.at(e).second);
             // Store id in first role
             eItem->setData(elemNamesIds.at(e).first, Qt::UserRole);
             eItem->setEnabled(false);
+
+            QPixmap pix(":/images/default_shot.png");
+            eItem->setData(pix, Qt::DecorationRole);
+
             item->appendRow(eItem);
         }
     }
 
-    shotsTable->setModel(model);
-    shotsTable->sortByColumn(0, Qt::AscendingOrder);
+    elemtable->setModel(model);
+    elemtable->sortByColumn(0, Qt::AscendingOrder);
 
-    shotsTable->expandAll();
+    elemtable->expandAll();
 }
 
 void MainWindow::onClose() {

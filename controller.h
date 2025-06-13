@@ -12,7 +12,9 @@ public:
     QStringList loadArtists();
     QList<QPair<int, QString>> loadProjects();
     QList<QPair<int, QString>> loadShots(int show_id);
+    QList<QPair<int, QString>> loadAssets(int type_id);
     QList<QPair<int, QString>> loadShows();
+    QList<QPair<int, QString>> loadTypes();
     void storeProject(ProjectModel project);
 
 private:

@@ -18,7 +18,18 @@ public:
     ~MainWindow();
     void populateArtistsComboBox();
     void populateProjectsComboBox();
-    void populateElemTable();
+
+    /**
+     * @brief Fills the table showing elements with categories, shots and assets
+     * @param elemtable: The table (shot table or asset table)
+     * @param loadCategories: The function for loading categories (shows, types)
+     * @param loadElements: The function for loading elements (shots, assets)
+     */
+    void populateElemTable(
+        QTreeView *elemtable,
+        std::function<QList<QPair<int, QString>>()> loadCategories,
+        std::function<QList<QPair<int, QString>>(int)> loadElements
+        );
 
     /**
      * @brief Queries the selected Tab in the Elements Tab Widget
