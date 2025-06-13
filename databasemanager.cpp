@@ -23,13 +23,7 @@ DataBaseManager::DataBaseManager() {
     }
 }
 
-/**
- * @brief Returns a column of a given table as a list.
- * @param table
- * @param column
- * @return a QStringList of all entries.
- */
-QStringList DataBaseManager::getColumn(QString table, QString column) {
+QStringList DataBaseManager::getColumn(const QString& table, const QString& column) {
     QStringList result;
 
     QString queryStr = QString("SELECT %1 FROM %2").arg(column, table);
@@ -45,10 +39,6 @@ QStringList DataBaseManager::getColumn(QString table, QString column) {
     return result;
 }
 
-/**
- * @brief Retrieves short names of all artists.
- * @return List of short names.
- */
 QStringList DataBaseManager::getArtistList() {
     QStringList result;
     QSqlQuery query("SELECT short_name FROM artists");
@@ -80,15 +70,25 @@ QList<QPair<int, QString>> DataBaseManager::getShotList(int show_id) {
     return result;
 }
 
-/**
- * @brief Retrieves entries of a specified column
- * together with their id.
- * @return List of entries and ids.
- */
-QList<QPair<int, QString>> DataBaseManager::getColumnWithId(QString table, QString column) {
+QList<QPair<int, QString>> DataBaseManager::getColumnWithIdWhere(
+    const QString& column,
+    const QString& table,
+    const QString& whereColumn,
+    const QVariant& whereValue)
+{
     QList<QPair<int, QString>> result;
     QString queryString = QString("SELECT id, %1 FROM %2").arg(column, table);
-    QSqlQuery query(queryString);
+
+    if (!whereColumn.isEmpty() && whereValue.isValid()) {
+        queryString += QString(" WHERE %1 = ?").arg(whereColumn);
+    }
+
+    QSqlQuery query;
+    query.prepare(queryString);
+
+    if (!whereColumn.isEmpty() && whereValue.isValid()) {
+        query.addBindValue(whereValue);
+    }
 
     if (!query.exec()) {
         qDebug() << "Query-Error:" << query.lastError().text();
@@ -101,7 +101,7 @@ QList<QPair<int, QString>> DataBaseManager::getColumnWithId(QString table, QStri
     return result;
 }
 
-void DataBaseManager::storeProject(ProjectModel project) {
+void DataBaseManager::storeProject(const ProjectModel& project) {
     QSqlQuery query;
     query.prepare("INSERT INTO projects (name, path, description, status, frameRate, resolutionW, "
                   "resolutionH) VALUES (?, ?, ?, ?, ?, ?, ?)");
